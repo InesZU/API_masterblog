@@ -9,30 +9,43 @@ window.onload = function() {
     }
 }
 
-// Function to fetch all the posts from the API and display them on the page
+// Function to load all posts and display them
 function loadPosts() {
-    // Retrieve the base URL from the input field and save it to local storage
     var baseUrl = document.getElementById('api-base-url').value;
     localStorage.setItem('apiBaseUrl', baseUrl);
 
-    // Use the Fetch API to send a GET request to the /posts endpoint
     fetch(baseUrl + '/posts')
-        .then(response => response.json())  // Parse the JSON data from the response
-        .then(data => {  // Once the data is ready, we can use it
-            // Clear out the post container first
+        .then(response => response.json())
+        .then(data => {
             const postContainer = document.getElementById('post-container');
             postContainer.innerHTML = '';
 
-            // For each post in the response, create a new post element and add it to the page
             data.forEach(post => {
                 const postDiv = document.createElement('div');
                 postDiv.className = 'post';
-                postDiv.innerHTML = `<h2>${post.title}</h2><p>${post.content}</p>
-                <button onclick="deletePost(${post.id})">Delete</button>`;
+
+                let commentsHTML = '';
+                if (Array.isArray(post.comments) && post.comments.length > 0) {
+                    commentsHTML = post.comments.map(comment => `<p>${comment}</p>`).join('');
+                }
+                postDiv.innerHTML = `
+                    <h2>${post.title}</h2>
+                    <p>${post.content}</p>
+                    <button onclick="deletePost(${post.id})" class="delete-button">Delete</button>
+                    <button onclick="toggleComments(${post.id})" class="comment-button">Add Comment</button>
+                    <div class="comments-section" id="comments-section-${post.id}" style="display: none;">
+                        <h3>Comments</h3>
+                        ${commentsHTML}
+                        <form onsubmit="addComment(event, ${post.id})">
+                            <input type="text" name="comment" placeholder="Add a comment" required>
+                            <button type="submit">Submit Comment</button>
+                        </form>
+                    </div>
+                `;
                 postContainer.appendChild(postDiv);
             });
         })
-        .catch(error => console.error('Error:', error));  // If an error occurs, log it to the console
+        .catch(error => console.error('Error:', error));
 }
 
 // Function to send a POST request to the API to add a new post
@@ -69,4 +82,47 @@ function deletePost(postId) {
         loadPosts(); // Reload the posts after deleting one
     })
     .catch(error => console.error('Error:', error));  // If an error occurs, log it to the console
+}
+
+// Function to show the comment form
+function showCommentForm(postId) {
+    document.getElementById(`comment-form-${postId}`).style.display = 'block';
+}
+
+// Function to add a comment
+function addComment(event, postId) {
+    event.preventDefault();  // Prevent the form from submitting the traditional way
+    var baseUrl = document.getElementById('api-base-url').value;
+    var comment = document.querySelector(`#comments-section-${postId} input[name="comment"]`).value.trim();
+
+    if (!comment) {
+        console.error('Comment cannot be empty');
+        return;
+    }
+
+    fetch(`${baseUrl}/posts/${postId}/comments`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ comment: comment })
+    })
+    .then(response => response.json())
+    .then(post => {
+        // Update the post with the new comment
+        document.getElementById(`comments-section-${postId}`).innerHTML = `
+            <h3>Comments</h3>
+            ${post.comments.map(c => `<p>${c}</p>`).join('')}
+            <form onsubmit="addComment(event, ${postId})">
+                <input type="text" name="comment" placeholder="Add a comment" required>
+                <button type="submit">Submit Comment</button>
+            </form>
+        `;
+        document.querySelector(`#comments-section-${postId} input[name="comment"]`).value = ''; // Clear input field
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+// Function to toggle the visibility of the comments section
+function toggleComments(postId) {
+    var commentsSection = document.getElementById(`comments-section-${postId}`);
+    commentsSection.style.display = (commentsSection.style.display === 'none') ? 'block' : 'none';
 }

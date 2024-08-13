@@ -89,3 +89,51 @@ body {
 .post button:hover {
     background-color: #cc0000;
 }
+
+/* Comment button style */
+.comment-button {
+    position: relative;
+    background-color: #ff4444;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 50px; /* Add margin on top to separate from post content */
+}
+
+.comment-button:hover {
+    background-color: #cc0000; /* Same color as delete button hover */
+}
+
+/* Comment section styles */
+.comments-section {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+}
+
+.comments-section form {
+    margin-top: 10px;
+}
+
+.comments-section input {
+    margin-right: 10px;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+.comments-section button {
+    background-color: #4466ee;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.comments-section button:hover {
+    background-color: #3355dd;
+}
