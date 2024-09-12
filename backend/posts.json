@@ -1,0 +1,43 @@
+[
+    {
+        "title": "First post",
+        "content": "This is the first post.",
+        "id": 1,
+        "comments": [
+            "This is a new comment"
+        ]
+    },
+    {
+        "title": "Greetings",
+        "content": "Hello.",
+        "id": 2,
+        "comments": [
+            "nice post"
+        ]
+    },
+    {
+        "id": 3,
+        "title": "Third post",
+        "content": "This is the 3 post.",
+        "comments": [
+            "hello"
+        ]
+    },
+    {
+        "id": 4,
+        "title": "Forth post",
+        "content": "This is the 4 post.",
+        "comments": [
+            "hi",
+            "my fav post"
+        ]
+    },
+    {
+        "title": "Fifth post ",
+        "content": "post number 5",
+        "id": 5,
+        "comments": [
+            "no comments yet"
+        ]
+    }
+]
