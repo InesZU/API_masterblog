@@ -238,8 +238,10 @@ def search_posts():
     filtered_posts = [
         post
         for post in data
-        if (title_query.lower() in post.get("title", "").lower())
-           or (content_query.lower() in post.get("content", "").lower())
+        if (title_query.lower() in post.get("title", "").lower()
+            if title_query else True) and (
+               content_query.lower() in post.get("content", "").lower()
+               if content_query else True)
     ]
 
     return jsonify(filtered_posts)
